@@ -2,6 +2,7 @@ import React from "react";
 import Stories from "./Stories";
 import Posts from "./Posts";
 import MiniProfile from "./MiniProfile";
+import Suggestions from "./Suggestions";
 const Feed = () => {
   return (
     <div className="max-w-7xl mx-auto grid-cols-1 gap-4 overflow-auto scrollbar-hide pb-60 h-full  my-6 grid md:max-w-3xl md:grid-cols-2 xl:max-w-6xl xl:grid-cols-3">
@@ -11,6 +12,7 @@ const Feed = () => {
       </section>
       <section>
         <MiniProfile />
+        <Suggestions />
       </section>
     </div>
   );
