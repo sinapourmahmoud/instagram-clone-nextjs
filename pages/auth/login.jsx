@@ -16,7 +16,7 @@ const Login = ({ providers: { google } }) => {
       />
       <button
         onClick={() => {
-          signIntoProvider(google.id);
+          signIntoProvider(google.id, { callbackUrl: "/" });
         }}
         className="bg-blue-500 text-white py-2 px-4 rounded-3xl"
       >
