@@ -3,9 +3,9 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 ## Instagram Clone | Nextjs
 
 <h6>By Sina Pourmahmoud</h6>
-index Page
+
 ![alt text](https://firebasestorage.googleapis.com/v0/b/instagram-clone-next-a5a04.appspot.com/o/main.png?alt=media&token=cecc40f0-5fdb-49bc-ac8b-0a552707f9bb)
-signin Page
+
 ![alt text](https://firebasestorage.googleapis.com/v0/b/instagram-clone-next-a5a04.appspot.com/o/signin.png?alt=media&token=815177fe-c5e1-4415-a0cc-47a5df1bddb5)
 First, run the development server:
 
