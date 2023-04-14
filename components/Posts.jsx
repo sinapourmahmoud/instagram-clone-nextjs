@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Post from "./Post";
+import { useShowPosts } from "@/utils/customHooks";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { db } from "@/firebase";
 const Posts = () => {
   let [posts, setPosts] = useState([]);
+
   useEffect(() => {
     return onSnapshot(
       query(collection(db, "posts"), orderBy("timestamp", "desc")),

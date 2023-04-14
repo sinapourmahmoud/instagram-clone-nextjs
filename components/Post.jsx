@@ -23,24 +23,14 @@ import {
 } from "firebase/firestore";
 import { db } from "@/firebase";
 import { addCommentLogic, toggleLikeLogic } from "@/utils/data";
+import { useSetComments } from "@/utils/customHooks";
 const Post = ({ postedBy, userImage, postImage, caption, id }) => {
   let [comment, setComment] = useState("");
-  let [postComments, setPostComments] = useState([]);
   let [hasLiked, setHasLiked] = useState(false);
   let [allLikes, setAllLikes] = useState([]);
 
   let { data: session } = useSession();
-  useEffect(() => {
-    return onSnapshot(
-      query(
-        collection(db, "posts", id, "comments"),
-        orderBy("timestamp", "desc")
-      ),
-      (res) => {
-        setPostComments(res.docs);
-      }
-    );
-  });
+  let { postComments, setPostComments } = useSetComments(id);
   useEffect(() => {
     return onSnapshot(collection(db, "posts", id, "likes"), (res) => {
       setAllLikes(res.docs);
