@@ -15,7 +15,6 @@ import Link from "next/link";
 import Router from "next/router";
 const Header = ({ setIsOpen }) => {
   let { data: session } = useSession();
-  console.log(session?.user?.image);
   return (
     <div className="bg-white static top-0  px-3 lg:px-0 py-3 shadow-lg mx-auto">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
