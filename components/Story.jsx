@@ -11,7 +11,7 @@ const Story = ({ img, userName }) => {
         />
       </div>
       <p className="text-base font-medium">
-        {userName.length > 5 ? userName.slice(0, 5) + "..." : userName}{" "}
+        {userName?.length > 5 ? userName.slice(0, 5) + "..." : userName}{" "}
       </p>
     </div>
   );
