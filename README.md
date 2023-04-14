@@ -2,6 +2,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
+![alt text](https://firebasestorage.googleapis.com/v0/b/instagram-clone-next-a5a04.appspot.com/o/posts%2FcZVAEZSD2gCrJgT6oJ8k?alt=media&token=e84bd225-84f5-4e89-b5df-20158dcfbf78)
 First, run the development server:
 
 ```bash
