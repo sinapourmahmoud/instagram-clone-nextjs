@@ -17,6 +17,7 @@ const Posts = () => {
       {posts?.map((item) => (
         <Post
           key={item.id}
+          id={item.id}
           postedBy={item.data().postedBy}
           postImage={item.data().postImage}
           caption={item.data().caption}
