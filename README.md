@@ -19,3 +19,15 @@ yarn dev
 # or
 pnpm dev
 ```
+
+<h4>Technologies that i used</h4>
+<ul>
+<li>Firebase</li>
+<li>Tailwind css</li>
+<li>Faker</li>
+<li>Next-auth</li>
+<li>react-moment</li>
+<li>tailwind-scrollbar</li>
+<li>tailwind-scrollbar-hide</li>
+
+</ul>
