@@ -1,17 +1,9 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useRef, useState } from "react";
 import { CameraIcon } from "@heroicons/react/outline";
-import { db, storage } from "@/firebase";
-//firebase
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import {
-  addDoc,
-  collection,
-  doc,
-  serverTimestamp,
-  updateDoc,
-} from "firebase/firestore";
+
 import { useSession } from "next-auth/react";
+import { sendPostLogic } from "@/utils/data";
 
 export default function Modal({ setIsOpen, isOpen }) {
   let { data: session } = useSession();
@@ -23,60 +15,17 @@ export default function Modal({ setIsOpen, isOpen }) {
   let [loading, setLoading] = useState(false);
   const sendPost = async (e) => {
     e.preventDefault();
-    let textRefValue = captionText.current.value;
-    if (textRefValue && imageSrc) {
-      setLoading(true);
-      let docRef = await addDoc(collection(db, "posts"), {
-        caption: captionText.current.value,
-        postedBy: session?.user?.name,
-        userImage: session?.user?.image,
-        timestamp: serverTimestamp(),
-      });
-      const storageRef = ref(storage, `posts/${docRef.id}`);
-
-      const uploadTask = uploadBytesResumable(storageRef, imageSrc);
-
-      // Register three observers:
-      // 1. 'state_changed' observer, called any time the state changes
-      // 2. Error observer, called on failure
-      // 3. Completion observer, called on successful completion
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          // Observe state change events such as progress, pause, and resume
-          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log("Upload is " + progress + "% done");
-          switch (snapshot.state) {
-            case "paused":
-              console.log("Upload is paused");
-              break;
-            case "running":
-              console.log("Upload is running");
-              break;
-          }
-        },
-        (err) => {
-          console.log(err);
-        },
-        () => {
-          // Handle successful uploads on complete
-          // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-            let updatedData = await updateDoc(doc(db, "posts", docRef.id), {
-              postImage: downloadURL,
-            });
-            setIsOpen(false);
-            setLoading(false);
-            setImageSrc(null);
-            setImageSrcUrl(null);
-          });
-        }
-      );
-    } else {
-      setErrorMessage("Please fill out all the posts");
-    }
+    //from utils
+    sendPostLogic(
+      setLoading,
+      captionText,
+      imageSrc,
+      session,
+      setIsOpen,
+      setImageSrc,
+      setImageSrcUrl,
+      setErrorMessage
+    );
   };
   const closeModal = () => {
     setErrorMessage(null);

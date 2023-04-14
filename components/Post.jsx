@@ -22,6 +22,7 @@ import {
   setDoc,
 } from "firebase/firestore";
 import { db } from "@/firebase";
+import { addCommentLogic, toggleLikeLogic } from "@/utils/data";
 const Post = ({ postedBy, userImage, postImage, caption, id }) => {
   let [comment, setComment] = useState("");
   let [postComments, setPostComments] = useState([]);
@@ -54,40 +55,12 @@ const Post = ({ postedBy, userImage, postImage, caption, id }) => {
   }, [allLikes]);
   const addComment = async (e) => {
     e.preventDefault();
-    try {
-      let addCommentDoc = await addDoc(
-        collection(db, "posts", id, "comments"),
-        {
-          commentBy: session?.user.name,
-          comment,
-          userImage: session?.user?.image,
-          timestamp: serverTimestamp(),
-        }
-      );
-      setComment("");
-    } catch (err) {
-      console.log(err.message);
-    }
+    addCommentLogic(session, id, setComment, comment);
   };
   const toggleLike = async () => {
-    if (hasLiked) {
-      try {
-        await deleteDoc(doc(db, "posts", id, "likes", session?.user?.email));
-      } catch (err) {
-        console.log(err);
-      }
-    } else {
-      try {
-        await setDoc(doc(db, "posts", id, "likes", session?.user?.email), {
-          userName: session?.user?.name,
-          email: session?.user?.email,
-        });
-      } catch (err) {
-        console.log(err.message);
-      }
-    }
-    console.log(hasLiked);
+    toggleLikeLogic(hasLiked, id, session);
   };
+
   return (
     <div className="flex flex-col bg-white rounded-lg py-2 gap-3">
       <div className="flex items-center gap-2 px-3">
