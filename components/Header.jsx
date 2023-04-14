@@ -51,7 +51,7 @@ const Header = ({ setIsOpen }) => {
               onClick={() => {
                 setIsOpen((prev) => !prev);
               }}
-              className="h-6 w-6 cursor-pointer lg:block hidden "
+              className="h-6 w-6 cursor-pointer  "
             />
             <div className="relative lg:block hidden">
               <PaperAirplaneIcon className="h-8 w-8 cursor-pointer rotate-45" />
