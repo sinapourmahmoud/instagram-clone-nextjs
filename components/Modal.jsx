@@ -7,6 +7,7 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import {
   addDoc,
   collection,
+  doc,
   serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
@@ -56,7 +57,9 @@ export default function Modal({ setIsOpen, isOpen }) {
               break;
           }
         },
-
+        (err) => {
+          console.log(err);
+        },
         () => {
           // Handle successful uploads on complete
           // For instance, get the download URL: https://firebasestorage.googleapis.com/...
@@ -66,6 +69,8 @@ export default function Modal({ setIsOpen, isOpen }) {
             });
             setIsOpen(false);
             setLoading(false);
+            setImageSrc(null);
+            setImageSrcUrl(null);
           });
         }
       );

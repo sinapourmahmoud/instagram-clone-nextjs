@@ -10,21 +10,21 @@ import {
 } from "@heroicons/react/outline";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
-const Post = () => {
+const Post = ({ postedBy, userImage, postImage, caption }) => {
   let { data: session } = useSession();
   return (
     <div className="flex flex-col bg-white rounded-lg py-2 gap-3">
       <div className="flex items-center gap-2 px-3">
         <img
-          src="./america.png"
+          src={userImage}
           alt="profile"
           className="w-10 h-10 rounded-full object-contain"
         />
-        <p className="text-base font-bold flex-1">User NAme</p>
+        <p className="text-base font-bold flex-1">{postedBy}</p>
         <MenuIcon className="h-5 cursor-pointer" />
       </div>
       <div className="w-full h-52 md:h-64 relative">
-        <Image src="/sina.jpg" alt="post" layout="fill" objectFit="cover" />
+        <img src={postImage} alt="post" />
       </div>
       {session && (
         <div className="flex itesm-center justify-between px-3">
@@ -39,11 +39,7 @@ const Post = () => {
       <p className="text-sm font-bold px-4">2 Likes</p>
       <p className="text-sm font-bold px-4">
         Sina:{" "}
-        <span className="text-base font-medium text-gray-800">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam neque
-          magni facere iste natus! Tempora, autem! Nam nobis odit ipsum in
-          reiciendis vel enim, perferendis aperiam molestias dolores sed! Odit.
-        </span>
+        <span className="text-base font-medium text-gray-800">{caption}</span>
       </p>
       <div className="w-full p-2  h-28 overflow-auto scrollbar-thin scrollbar-thumb-black">
         <Comment />
