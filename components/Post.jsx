@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Comment from "./Comment";
+import { HeartIcon as SolidHeartIcon } from "@heroicons/react/solid";
 import {
   HeartIcon,
   PaperAirplaneIcon,
@@ -8,20 +9,24 @@ import {
   BookmarkIcon,
   EmojiHappyIcon,
 } from "@heroicons/react/outline";
-import Image from "next/image";
 import { useSession } from "next-auth/react";
 import {
   addDoc,
   collection,
+  deleteDoc,
+  doc,
   onSnapshot,
   orderBy,
   query,
   serverTimestamp,
+  setDoc,
 } from "firebase/firestore";
 import { db } from "@/firebase";
 const Post = ({ postedBy, userImage, postImage, caption, id }) => {
-  let [comment, setComment] = useState(null);
-  let [postComments, setPostComments] = useState([null]);
+  let [comment, setComment] = useState("");
+  let [postComments, setPostComments] = useState([]);
+  let [hasLiked, setHasLiked] = useState(false);
+  let [allLikes, setAllLikes] = useState([]);
 
   let { data: session } = useSession();
   useEffect(() => {
@@ -35,6 +40,18 @@ const Post = ({ postedBy, userImage, postImage, caption, id }) => {
       }
     );
   });
+  useEffect(() => {
+    return onSnapshot(collection(db, "posts", id, "likes"), (res) => {
+      setAllLikes(res.docs);
+    });
+  });
+  useEffect(() => {
+    setHasLiked(() => {
+      return (
+        allLikes.findIndex((like) => like.id == session?.user?.email) !== -1
+      );
+    });
+  }, [allLikes]);
   const addComment = async (e) => {
     e.preventDefault();
     try {
@@ -51,6 +68,25 @@ const Post = ({ postedBy, userImage, postImage, caption, id }) => {
     } catch (err) {
       console.log(err.message);
     }
+  };
+  const toggleLike = async () => {
+    if (hasLiked) {
+      try {
+        await deleteDoc(doc(db, "posts", id, "likes", session?.user?.email));
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      try {
+        await setDoc(doc(db, "posts", id, "likes", session?.user?.email), {
+          userName: session?.user?.name,
+          email: session?.user?.email,
+        });
+      } catch (err) {
+        console.log(err.message);
+      }
+    }
+    console.log(hasLiked);
   };
   return (
     <div className="flex flex-col bg-white rounded-lg py-2 gap-3">
@@ -73,29 +109,44 @@ const Post = ({ postedBy, userImage, postImage, caption, id }) => {
       {session && (
         <div className="flex itesm-center justify-between px-3">
           <div className="flex items-center gap-3 ">
-            <HeartIcon className="h-6 cursor-pointer" />
+            {hasLiked ? (
+              <SolidHeartIcon
+                onClick={toggleLike}
+                className="text-red-500 h-6 cursor-pointer"
+              />
+            ) : (
+              <HeartIcon
+                onClick={toggleLike}
+                className={`h-6 cursor-pointer `}
+              />
+            )}
+
             <ChatIcon className="h-6 cursor-pointer" />
             <PaperAirplaneIcon className="h-6 cursor-pointer" />
           </div>
           <BookmarkIcon className="h-6 cursor-pointer" />
         </div>
       )}
-      <p className="text-sm font-bold px-4">2 Likes</p>
+      <p className="text-sm font-bold px-4">{allLikes?.length} Likes</p>
       <p className="text-sm font-bold px-4">
         Sina:{" "}
         <span className="text-base font-medium text-gray-800">{caption}</span>
       </p>
       {postComments && (
-        <div className="w-full p-2  h-28 overflow-auto scrollbar-thin scrollbar-thumb-black flex flex-col gap-2">
-          {postComments?.map((item) => (
-            <Comment
-              key={item?.id}
-              commentBy={item?.data().commentBy}
-              comment={item?.data().comment}
-              userImage={item?.data().userImage}
-            />
-          ))}
-        </div>
+        <>
+          <p className="text-base font-normal px-3">Comments</p>
+          <div className="w-full p-2  h-28 overflow-auto scrollbar-thin scrollbar-thumb-black flex flex-col gap-2">
+            {postComments?.map((item) => (
+              <Comment
+                key={item?.id}
+                commentBy={item?.data().commentBy}
+                comment={item?.data().comment}
+                userImage={item?.data().userImage}
+                timestamp={item?.data().timestamp}
+              />
+            ))}
+          </div>
+        </>
       )}
       {session && (
         <form onSubmit={addComment}>

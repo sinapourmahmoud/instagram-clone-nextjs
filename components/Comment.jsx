@@ -1,17 +1,20 @@
 import React from "react";
-
-const Comment = ({ commentBy, comment, userImage }) => {
+import Moment from "react-moment";
+const Comment = ({ commentBy, comment, userImage, timestamp }) => {
   return (
-    <div className="flex items-start gap-3">
+    <div className="flex items-center gap-3">
       <img
         src={userImage}
         alt="comment"
-        className="w-10 h-10 rounded-full object-cover"
+        className="w-8 h-8 rounded-full object-cover"
       />
-      <p className="text-sm font-semibold">
-        {commentBy}{" "}
-        <span className="text-sm font-normal text-gray-600">{comment}</span>
+      <p className="text-sm font-semibold flex-1">
+        {commentBy}:
+        <span className="text-sm font-normal text-gray-600"> {comment}</span>
       </p>
+      <Moment fromNow className="pr-3 text-sm font-normal">
+        {timestamp?.toDate()}
+      </Moment>
     </div>
   );
 };
